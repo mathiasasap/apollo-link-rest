@@ -182,7 +182,7 @@ var __spreadArrays =
         r[k] = a[j];
     return r;
   };
-import { ApolloLink, Observable } from '@apollo/client/core';
+import { ApolloLink, Observable } from 'apollo-link';
 import {
   hasDirectives,
   getMainDefinition,
@@ -192,11 +192,10 @@ import {
   isField,
   isInlineFragment,
   resultKeyNameFromField,
-  checkDocument,
-  removeDirectivesFromDocument,
-} from '@apollo/client/utilities';
+} from 'apollo-utilities';
 import { graphql } from 'graphql-anywhere/lib/async';
 import * as qs from 'qs';
+import { removeRestSetsFromDocument } from './utils';
 var popOneSetOfArrayBracketsFromTypeName = function(typename) {
   var noSpace = typename.replace(/\s/g, '');
   var sansOneBracketPair = noSpace.replace(/\[(.*)\]/, function(
@@ -754,7 +753,6 @@ var resolver = function(fieldName, root, args, context, info) {
                 'Invalid use of @type(name: ...) directive on a call that also has @rest(...)',
               );
             }
-            copyExportVariables(preAliasingNode);
             return [
               2 /*return*/,
               addTypeToNode(preAliasingNode, directives.type.name),
@@ -1008,12 +1006,6 @@ var DEFAULT_JSON_SERIALIZER = function(data, headers) {
     headers: headers,
   };
 };
-var CONNECTION_REMOVE_CONFIG = {
-  test: function(directive) {
-    return directive.name.value === 'rest';
-  },
-  remove: true,
-};
 /**
  * RestLink is an apollo-link for communicating with REST services using GraphQL on the client-side
  */
@@ -1118,20 +1110,8 @@ var RestLink = /** @class */ (function(_super) {
       _b),
       bodySerializers || {},
     );
-    _this.processedDocuments = new Map();
     return _this;
   }
-  RestLink.prototype.removeRestSetsFromDocument = function(query) {
-    var cached = this.processedDocuments.get(query);
-    if (cached) return cached;
-    checkDocument(query);
-    var docClone = removeDirectivesFromDocument(
-      [CONNECTION_REMOVE_CONFIG],
-      query,
-    );
-    this.processedDocuments.set(query, docClone);
-    return docClone;
-  };
   RestLink.prototype.request = function(operation, forward) {
     var query = operation.query,
       variables = operation.variables,
@@ -1142,7 +1122,7 @@ var RestLink = /** @class */ (function(_super) {
     if (!isRestQuery) {
       return forward(operation);
     }
-    var nonRest = this.removeRestSetsFromDocument(query);
+    var nonRest = removeRestSetsFromDocument(query);
     // 1. Use the user's merge policy if any
     var headersMergePolicy = context.headersMergePolicy;
     if (

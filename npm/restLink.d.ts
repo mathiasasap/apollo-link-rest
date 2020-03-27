@@ -5,7 +5,7 @@ import {
   Operation,
   NextLink,
   FetchResult,
-} from '@apollo/client/core';
+} from 'apollo-link';
 export declare namespace RestLink {
   type URI = string;
   type Endpoint = string;
@@ -124,7 +124,7 @@ export declare namespace RestLink {
     /**
      * The credentials policy you want to use for the fetch call.
      */
-    credentials?: 'omit' | 'same-origin' | 'include';
+    credentials?: RequestCredentials;
     /**
      * Use a custom fetch to handle REST calls.
      */
@@ -259,7 +259,6 @@ export declare class RestLink extends ApolloLink {
   private readonly customFetch;
   private readonly serializers;
   private readonly responseTransformer;
-  private readonly processedDocuments;
   constructor({
     uri,
     endpoints,
@@ -273,7 +272,6 @@ export declare class RestLink extends ApolloLink {
     defaultSerializer,
     responseTransformer,
   }: RestLink.Options);
-  private removeRestSetsFromDocument;
   request(
     operation: Operation,
     forward?: NextLink,

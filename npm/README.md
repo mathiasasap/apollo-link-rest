@@ -49,7 +49,7 @@ const query = gql`
 
 // Invoke the query and log the person's name
 client.query({ query }).then(response => {
-  console.log(response.data.person.name);
+  console.log(response.data.name);
 });
 ```
 
@@ -110,9 +110,3 @@ npm link
 # in the project you want to run this in
 npm link apollo-link-rest
 ```
-
-## Related Libraries
-
-- [JSON API Link](https://github.com/Rsullivan00/apollo-link-json-api/) provides
-tooling for using GraphQL with JSON API compliant APIs.
-- [apollo-type-patcher](https://github.com/mpgon/apollo-type-patcher) declarative type definitions for your REST API with zero dependencies. 
