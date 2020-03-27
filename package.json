@@ -1,5 +1,5 @@
 {
-  "name": "apollo-link-rest",
+  "name": "apollo-link-rest-asap",
   "version": "0.7.3",
   "description": "Query existing REST services with GraphQL",
   "license": "MIT",
