@@ -2506,7 +2506,7 @@ describe('Mutation', () => {
 
       const replacePostMutation = gql`
         mutation deletePost($id: ID!) {
-          deletePostResponse(id: $id)
+          deletePostResponse(id: $id, input: {})
             @rest(type: "Post", path: "/posts/:id", method: "DELETE") {
             NoResponse
           }

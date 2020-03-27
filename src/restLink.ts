@@ -968,7 +968,7 @@ const resolver: Resolver = async (
 
   let body = undefined;
   let overrideHeaders: Headers = undefined;
-  if (-1 === ['GET', 'DELETE'].indexOf(method)) {
+  if (-1 === ['GET'].indexOf(method)) {
     // Prepare our body!
     if (!bodyBuilder) {
       // By convention GraphQL recommends mutations having a single argument named "input"
